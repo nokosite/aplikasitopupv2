@@ -1,14 +1,14 @@
 import React from 'react';
 import Onboarding from 'react-native-onboarding-swiper';
-import OnboardingImage from '../molecules/OnboardingImage';
-import { StackNavigationProp } from '@react-navigation/native-stack';
+import OnboardingImage from '../atoms/OnboardingImage';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../navigation';
 
 type Props = {
   navigation: StackNavigationProp<RootStackParamList, 'Onboarding'>;
 };
 
-const OnboardingSwiper: React.FC<Props> = ({ navigation }) => {
+const OnboardingSwiper = ({ navigation }: Props) => {
   return (
     <Onboarding
       onSkip={() => navigation.replace('Home')}

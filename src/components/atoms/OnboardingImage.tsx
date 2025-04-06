@@ -1,15 +1,13 @@
 import React from 'react';
-import { Image, StyleSheet } from 'react-native';
+import { Image, ImageSourcePropType, StyleSheet } from 'react-native';
 
-interface Props {
-  source: any;
-}
-
-const OnboardingImage: React.FC<Props> = ({ source }) => {
-  return <Image source={source} style={styles.image} />;
+type Props = {
+  source: ImageSourcePropType;
 };
 
-export default OnboardingImage;
+const OnboardingImage = ({ source }: Props) => {
+  return <Image source={source} style={styles.image} />;
+};
 
 const styles = StyleSheet.create({
   image: {
@@ -18,3 +16,5 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
 });
+
+export default OnboardingImage;
