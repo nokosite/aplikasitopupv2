@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  SafeAreaView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { games } from '../data/gameData';
@@ -45,55 +46,57 @@ const Home: React.FC = () => {
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.greeting}>Hai, Mahes 👋</Text>
-      <Text style={styles.heading}>TopUp Voucher Game</Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#1e1e2e' }}>
+      <View style={{ flex: 1, padding: 16 }}>
+        <Text style={{ color: '#fff' }}>Hai Mahes 👋</Text>
+        <Text style={styles.heading}>TopUp Voucher Game</Text>
 
-      <TextInput
-        placeholder="Cari game..."
-        placeholderTextColor="#888"
-        style={styles.searchInput}
-        value={search}
-        onChangeText={handleSearch}
-      />
+        <TextInput
+          placeholder="Cari game..."
+          placeholderTextColor="#888"
+          style={styles.searchInput}
+          value={search}
+          onChangeText={handleSearch}
+        />
 
-      {search.length > 0 ? (
-        <>
-          <Text style={styles.sectionTitle}>🔍 Hasil Pencarian</Text>
-          <FlatList
-            key="search"
-            data={filteredGames}
-            numColumns={2}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => renderGameCard(item)}
-            columnWrapperStyle={{ justifyContent: 'space-between' }}
-          />
-        </>
-      ) : (
-        <>
-          <Text style={styles.sectionTitle}>🔥 Produk Unggulan</Text>
-          <FlatList
-            key="featured"
-            data={featuredGames}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => renderGameCard(item, true)}
-            contentContainerStyle={{ paddingBottom: 8 }}
-          />
+        {search.length > 0 ? (
+          <>
+            <Text style={styles.sectionTitle}>🔍 Hasil Pencarian</Text>
+            <FlatList
+              key="search"
+              data={filteredGames}
+              numColumns={2}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => renderGameCard(item)}
+              columnWrapperStyle={{ justifyContent: 'space-between' }}
+            />
+          </>
+        ) : (
+          <>
+            <Text style={styles.sectionTitle}>🔥 Produk Unggulan</Text>
+            <FlatList
+              key="featured"
+              data={featuredGames}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => renderGameCard(item, true)}
+              contentContainerStyle={{ paddingBottom: 8 }}
+            />
 
-          <Text style={styles.sectionTitle}>🎮 Semua Game</Text>
-          <FlatList
-            key="all"
-            data={games}
-            numColumns={2}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => renderGameCard(item)}
-            columnWrapperStyle={{ justifyContent: 'space-between' }}
-          />
-        </>
-      )}
-    </View>
+            <Text style={styles.sectionTitle}>🎮 Semua Game</Text>
+            <FlatList
+              key="all"
+              data={games}
+              numColumns={2}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => renderGameCard(item)}
+              columnWrapperStyle={{ justifyContent: 'space-between' }}
+            />
+          </>
+        )}
+      </View>
+    </SafeAreaView>
   );
 };
 
