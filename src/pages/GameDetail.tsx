@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
     View, Text, Image, StyleSheet,
-    FlatList, TouchableOpacity, TextInput, ScrollView
+    FlatList, TouchableOpacity, TextInput, ScrollView, SafeAreaView,
 } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation';
@@ -50,51 +50,53 @@ const GameDetail: React.FC<Props> = ({ route }) => {
     const total = selectedProduct ? selectedProduct.price : 0;
 
     return (
-        <View style={styles.container}>
-            <ScrollView contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
-                <Image source={game.image} style={styles.gameImage} />
-                <Text style={styles.title}>{game.name}</Text>
-                <Text style={styles.subtitle}>Masukkan ID Akun:</Text>
-                <TextInput
-                    placeholder="Contoh: 123456789"
-                    style={styles.input}
-                    placeholderTextColor="#888"
-                    value={userId}
-                    onChangeText={setUserId}
-                />
+        <SafeAreaView style={styles.container}>
+            <View style={styles.container}>
+                <ScrollView contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
+                    <Image source={game.image} style={styles.gameImage} />
+                    <Text style={styles.title}>{game.name}</Text>
+                    <Text style={styles.subtitle}>Masukkan ID Akun:</Text>
+                    <TextInput
+                        placeholder="Contoh: 123456789"
+                        style={styles.input}
+                        placeholderTextColor="#888"
+                        value={userId}
+                        onChangeText={setUserId}
+                    />
 
-                <Text style={styles.subtitle}>Pilih jumlah top-up kamu:</Text>
-                <FlatList
-                    data={game.products}
-                    renderItem={renderProduct}
-                    keyExtractor={(item) => item.id}
-                    scrollEnabled={false}
-                />
+                    <Text style={styles.subtitle}>Pilih jumlah top-up kamu:</Text>
+                    <FlatList
+                        data={game.products}
+                        renderItem={renderProduct}
+                        keyExtractor={(item) => item.id}
+                        scrollEnabled={false}
+                    />
 
-                <Text style={styles.subtitle}>Metode Pembayaran:</Text>
-                <PaymentMethod
-                    selectedPayment={selectedPayment}
-                    setSelectedPayment={setSelectedPayment}
-                />
+                    <Text style={styles.subtitle}>Metode Pembayaran:</Text>
+                    <PaymentMethod
+                        selectedPayment={selectedPayment}
+                        setSelectedPayment={setSelectedPayment}
+                    />
 
 
-                <View style={styles.totalBox}>
-                    <Text style={styles.totalText}>Total: </Text>
-                    <Text style={styles.totalAmount}>Rp{total.toLocaleString('id-ID')}</Text>
-                </View>
+                    <View style={styles.totalBox}>
+                        <Text style={styles.totalText}>Total: </Text>
+                        <Text style={styles.totalAmount}>Rp{total.toLocaleString('id-ID')}</Text>
+                    </View>
 
-                <TouchableOpacity
-                    style={[styles.confirmButton, !(selectedProduct && userId && selectedPayment) && { backgroundColor: '#555' }]}
-                    disabled={!(selectedProduct && userId && selectedPayment)}
-                    onPress={() => {
-                        // Logic submit bisa ditaruh di sini
-                        alert(`Top-up ${selectedProduct.label} ke ID ${userId} via ${selectedPayment}`);
-                    }}
-                >
-                    <Text style={styles.confirmText}>Konfirmasi Pembelian</Text>
-                </TouchableOpacity>
-            </ScrollView>
-        </View>
+                    <TouchableOpacity
+                        style={[styles.confirmButton, !(selectedProduct && userId && selectedPayment) && { backgroundColor: '#555' }]}
+                        disabled={!(selectedProduct && userId && selectedPayment)}
+                        onPress={() => {
+                            // Logic submit bisa ditaruh di sini
+                            alert(`Top-up ${selectedProduct.label} ke ID ${userId} via ${selectedPayment}`);
+                        }}
+                    >
+                        <Text style={styles.confirmText}>Konfirmasi Pembelian</Text>
+                    </TouchableOpacity>
+                </ScrollView>
+            </View>
+        </SafeAreaView>
     );
 };
 
