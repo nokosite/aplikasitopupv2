@@ -1,43 +1,65 @@
-import { StyleSheet, Dimensions } from 'react-native';
-import { Platform } from 'react-native';
+import { StyleSheet, Dimensions, Platform, StatusBar } from 'react-native';
+
 const { width } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: Platform.OS === 'ios' ? 50 : 20,
-        paddingHorizontal: 16,
-        backgroundColor: '#fff',
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 50,
+        paddingHorizontal: 24, // ← lebih lega kanan kirinya
+        backgroundColor: '#1e1e2e',
+    },
+    view: {
+        padding: 20,
     },
 
-    greeting: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: '500',
-        marginBottom: 10,
+    // Header Area
+    header: {
+        marginBottom: 20,
     },
+    greeting: {
+        fontSize: 22,
+        color: '#fff',
+        fontWeight: '600',
+    },
+    username: {
+        fontSize: 28,
+        color: '#00bcd4',
+        fontWeight: '700',
+    },
+    subtitle: {
+        fontSize: 14,
+        color: '#bbb',
+        marginTop: 4,
+    },
+
+    // Search Input
     searchInput: {
-        backgroundColor: '#1e1e1e',
+        backgroundColor: '#2e2e3e',
         color: '#fff',
         borderRadius: 12,
-        paddingVertical: 8,
+        paddingVertical: 10,
         paddingHorizontal: 14,
         marginBottom: 16,
     },
-    heading: {
-        fontSize: 22,
-        color: '#fff',
-        fontWeight: '700',
-        marginBottom: 16,
-        textAlign: 'center',
-    },
+
+    // Section Titles
     sectionTitle: {
-        color: '#ccc',
-        fontSize: 16,
-        fontWeight: '600',
-        marginBottom: 10,
-        marginTop: 20,
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: '700',
+        marginBottom: 8,
+        marginTop: 16,
     },
+    sectionTitle2: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: '700',
+        marginBottom: 8,
+        marginTop: 16,
+    },
+
+    // Card Style
     card: {
         backgroundColor: 'rgba(255,255,255,0.06)',
         borderRadius: 16,
@@ -51,10 +73,12 @@ export const styles = StyleSheet.create({
         shadowRadius: 10,
     },
     featuredCard: {
-        width: width * 0.6,
+        width: width * 0.4,
         marginRight: 14,
         backgroundColor: 'rgba(255,255,255,0.08)',
     },
+
+    // Gambar Game
     image: {
         width: 90,
         height: 90,
@@ -65,6 +89,8 @@ export const styles = StyleSheet.create({
         width: 120,
         height: 120,
     },
+
+    // Nama Game
     name: {
         color: '#fff',
         fontSize: 15,

@@ -16,7 +16,7 @@ export type Product = {
     },
     {
       id: 'mobilelegends',
-      name: 'Mobile Legends',
+      name: 'Mobile Leg11ends',
       image: require('../assets/games/mobilelegends.jpg'),
       isFeatured: true,
     },

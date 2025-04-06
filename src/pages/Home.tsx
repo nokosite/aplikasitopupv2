@@ -7,17 +7,22 @@ import {
   TouchableOpacity,
   TextInput,
   SafeAreaView,
+  Platform,
+  StatusBar,
+  StyleSheet,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { games } from '../data/gameData';
+
 import { styles } from '../styles/homeStyles';
+import { styles as homeStyles } from '../styles/homeStyles';
 
 const Home: React.FC = () => {
   const navigation = useNavigation();
-  const featuredGames = games.filter((game) => game.populer);
-
   const [search, setSearch] = useState('');
   const [filteredGames, setFilteredGames] = useState(games);
+
+  const featuredGames = games.filter((game) => game.populer);
 
   const handleSearch = (text: string) => {
     setSearch(text);
@@ -34,67 +39,60 @@ const Home: React.FC = () => {
   const renderGameCard = (game: any, isFeatured = false) => (
     <TouchableOpacity
       key={game.id}
-      style={[styles.card, isFeatured && styles.featuredCard]}
+      style={[homeStyles.card, isFeatured && homeStyles.featuredCard]}
       onPress={() => navigation.navigate('GameDetail', { game })}
     >
-      <Image
-        source={game.image}
-        style={[styles.image, isFeatured && styles.featuredImage]}
-      />
-      <Text style={styles.name}>{game.name}</Text>
+      <Image source={game.image} style={[homeStyles.image, isFeatured && homeStyles.featuredImage]} />
+      <Text style={homeStyles.name}>{game.name}</Text>
     </TouchableOpacity>
   );
 
+  const showFeatured = search.trim() === '';
+  const showAllGames = search.trim() === '' ? games : filteredGames;
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#1e1e2e' }}>
-      <View style={{ flex: 1, padding: 16 }}>
-        <Text style={{ color: '#fff' }}>Hai Mahes 👋</Text>
-        <Text style={styles.heading}>TopUp Voucher Game</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.view}>
 
-        <TextInput
-          placeholder="Cari game..."
-          placeholderTextColor="#888"
-          style={styles.searchInput}
-          value={search}
-          onChangeText={handleSearch}
-        />
+      <StatusBar barStyle="light-content" backgroundColor="#1e1e2e" />
 
-        {search.length > 0 ? (
-          <>
-            <Text style={styles.sectionTitle}>🔍 Hasil Pencarian</Text>
-            <FlatList
-              key="search"
-              data={filteredGames}
-              numColumns={2}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => renderGameCard(item)}
-              columnWrapperStyle={{ justifyContent: 'space-between' }}
-            />
-          </>
-        ) : (
-          <>
-            <Text style={styles.sectionTitle}>🔥 Produk Unggulan</Text>
-            <FlatList
-              key="featured"
-              data={featuredGames}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => renderGameCard(item, true)}
-              contentContainerStyle={{ paddingBottom: 8 }}
-            />
+      <View style={styles.header}>
+        <Text style={styles.greeting}>Hai,</Text>
+        <Text style={styles.username}>Mahes 👋</Text>
+        <Text style={styles.subtitle}>Mau top up game favoritmu hari ini?</Text>
+      </View>
 
-            <Text style={styles.sectionTitle}>🎮 Semua Game</Text>
-            <FlatList
-              key="all"
-              data={games}
-              numColumns={2}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => renderGameCard(item)}
-              columnWrapperStyle={{ justifyContent: 'space-between' }}
-            />
-          </>
-        )}
+      <TextInput
+        placeholder="Cari game..."
+        placeholderTextColor="#aaa"
+        style={styles.searchInput}
+        value={search}
+        onChangeText={handleSearch}
+      />
+
+      {showFeatured && (
+        <>
+          <Text style={styles.sectionTitle}>🔥 Produk Unggulan</Text>
+          <FlatList
+            data={featuredGames}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => renderGameCard(item, true)}
+            contentContainerStyle={{ paddingBottom: 32 }}
+          />
+        </>
+      )}
+
+      <Text style={styles.sectionTitle2}>🎮 Semua Game</Text>
+      <FlatList
+        data={showAllGames}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => renderGameCard(item)}
+        numColumns={2}
+        columnWrapperStyle={{ justifyContent: 'space-between' }}
+        contentContainerStyle={{ paddingBottom: 32 }}
+      />
       </View>
     </SafeAreaView>
   );
