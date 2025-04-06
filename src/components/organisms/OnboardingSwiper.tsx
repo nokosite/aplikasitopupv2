@@ -1,40 +1,46 @@
+// src/components/OnBoardingSwiper.tsx
 import React from 'react';
-import Onboarding from 'react-native-onboarding-swiper';
-import OnboardingImage from '../atoms/OnboardingImage';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../navigation';
+import { View, Text, StyleSheet } from 'react-native';
+import OnBoardingImage from '../atoms/OnboardingImage';
 
-type Props = {
-  navigation: StackNavigationProp<RootStackParamList, 'Onboarding'>;
-};
+interface Props {
+  item: {
+    title: string;
+    description: string;
+    image: any;
+  };
+}
 
-const OnboardingSwiper = ({ navigation }: Props) => {
+const OnBoardingSwiper: React.FC<Props> = ({ item }) => {
   return (
-    <Onboarding
-      onSkip={() => navigation.replace('Home')}
-      onDone={() => navigation.replace('Home')}
-      pages={[
-        {
-          backgroundColor: '#fff',
-          image: <OnboardingImage source={require('../../assets/promo.jpg')} />,
-          title: 'Selamat Datang!',
-          subtitle: 'Aplikasi TopUp Voucher siap kamu pakai 🚀',
-        },
-        {
-          backgroundColor: '#fdeb93',
-          image: <OnboardingImage source={require('../../assets/promo.jpg')} />,
-          title: 'Cepat & Mudah',
-          subtitle: 'Top up tanpa ribet langsung dari ponselmu',
-        },
-        {
-          backgroundColor: '#e9bcbe',
-          image: <OnboardingImage source={require('../../assets/promo.jpg')} />,
-          title: 'Ayo Mulai!',
-          subtitle: 'Klik Get Started untuk masuk ke aplikasi',
-        },
-      ]}
-    />
+    <View style={styles.slide}>
+      <OnBoardingImage source={item.image} />
+      <Text style={styles.title}>{item.title}</Text>
+      <Text style={styles.description}>{item.description}</Text>
+    </View>
   );
 };
 
-export default OnboardingSwiper;
+export default OnBoardingSwiper;
+
+const styles = StyleSheet.create({
+  slide: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 30,
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: '700',
+    color: '#fff',
+    marginTop: 20,
+    textAlign: 'center',
+  },
+  description: {
+    fontSize: 16,
+    color: '#ccc',
+    textAlign: 'center',
+    marginTop: 10,
+  },
+});

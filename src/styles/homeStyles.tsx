@@ -9,6 +9,20 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 40,
   },
+  greeting: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '500',
+    marginBottom: 10,
+  },
+  searchInput: {
+    backgroundColor: '#1e1e1e',
+    color: '#fff',
+    borderRadius: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    marginBottom: 16,
+  },
   heading: {
     fontSize: 22,
     color: '#fff',

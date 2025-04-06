@@ -1,20 +1,21 @@
+// src/components/OnBoardingImage.tsx
 import React from 'react';
-import { Image, ImageSourcePropType, StyleSheet } from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 
-type Props = {
-  source: ImageSourcePropType;
-};
+interface Props {
+  source: any;
+}
 
-const OnboardingImage = ({ source }: Props) => {
+const OnBoardingImage: React.FC<Props> = ({ source }) => {
   return <Image source={source} style={styles.image} />;
 };
 
+export default OnBoardingImage;
+
 const styles = StyleSheet.create({
   image: {
-    width: 200,
-    height: 200,
+    width: 250,
+    height: 250,
     resizeMode: 'contain',
   },
 });
-
-export default OnboardingImage;
