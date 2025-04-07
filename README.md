@@ -1,6 +1,6 @@
-# 🎮 UdinApp – Aplikasi Top-Up Voucher Game
+# 🎮 AplikasiTopupMKSTORE – Aplikasi Top-Up Voucher Game
 
-**UdinApp** adalah aplikasi mobile berbasis React Native yang dirancang untuk memudahkan pengguna melakukan pencarian dan top-up voucher game favorit mereka. Aplikasi ini menampilkan onboarding interaktif, daftar produk unggulan, dan fitur pencarian game dengan antarmuka yang modern dan responsif.
+**AplikasiTopupMKSTORE** adalah aplikasi mobile berbasis React Native yang dirancang untuk memudahkan pengguna melakukan pencarian dan top-up voucher game favorit mereka. Aplikasi ini menampilkan onboarding interaktif, daftar produk unggulan, dan fitur pencarian game dengan antarmuka yang modern dan responsif.
 
 ---
 
@@ -18,8 +18,8 @@
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/username/udinapp.git
-cd udinapp
+git clone https://github.com/nokosite/aplikasitopupv2.git
+cd aplikasitopupv2
 ```
 
 ### 2. Install Dependencies
