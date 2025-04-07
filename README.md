@@ -64,6 +64,17 @@ udinapp/
 ```
 
 ---
+### 📦 Struktur Folder `src/components` Berdasarkan Atomic Design
+
+```
+src/
+├── components/
+│   ├── atoms/          # Komponen paling kecil (Tombol, Teks, Input)
+│   ├── molecules/      # Gabungan dari beberapa atom (SearchBar, CardItem)
+│   ├── organisms/      # Unit kompleks (Header, GameList)
+│   └── templates/      # Layout atau struktur halaman (HomeLayout, OnboardingLayout)
+```
+---
 
 ## 💡 Catatan Penggunaan
 
