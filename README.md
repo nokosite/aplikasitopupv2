@@ -1,8 +1,3 @@
-Berikut ini adalah versi lengkap `README.md` yang sudah diformat untuk GitHub:
-
----
-
-```md
 # 🎮 UdinApp – Aplikasi Top-Up Voucher Game
 
 **UdinApp** adalah aplikasi mobile berbasis React Native yang dirancang untuk memudahkan pengguna melakukan pencarian dan top-up voucher game favorit mereka. Aplikasi ini menampilkan onboarding interaktif, daftar produk unggulan, dan fitur pencarian game dengan antarmuka yang modern dan responsif.
