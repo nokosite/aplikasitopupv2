@@ -24,7 +24,7 @@ export const games = [
       id: 'valorant',
       name: 'Valorant',
       image: require('../assets/games/valo.jpg'),
-      populer: false,
+      populer: true,
       products: [
         { id: '1', label: '125 VP', price: 15000 },
         { id: '2', label: '250 VP', price: 30000 },
