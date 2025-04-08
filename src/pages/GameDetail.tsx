@@ -13,8 +13,6 @@ type Props = {
     navigation: any;
 };
 
-const paymentMethods = ['Dana', 'GoPay', 'OVO', 'ShopeePay', 'Bank Transfer'];
-
 const GameDetail: React.FC<Props> = ({ route }) => {
     const { game } = route.params;
     const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
@@ -34,19 +32,6 @@ const GameDetail: React.FC<Props> = ({ route }) => {
         </TouchableOpacity>
     );
 
-    const renderPayment = (method: string) => (
-        <TouchableOpacity
-            key={method}
-            style={[
-                styles.paymentOption,
-                selectedPayment === method && styles.selectedPayment
-            ]}
-            onPress={() => setSelectedPayment(method)}
-        >
-            <Text style={styles.paymentText}>{method}</Text>
-        </TouchableOpacity>
-    );
-
     const total = selectedProduct ? selectedProduct.price : 0;
 
     return (
@@ -61,7 +46,11 @@ const GameDetail: React.FC<Props> = ({ route }) => {
                         style={styles.input}
                         placeholderTextColor="#888"
                         value={userId}
-                        onChangeText={setUserId}
+                        keyboardType="numeric"
+                        onChangeText={(text) => {
+                            const numericText = text.replace(/[^0-9]/g, '');
+                            setUserId(numericText);
+                        }}
                     />
 
                     <Text style={styles.subtitle}>Pilih jumlah top-up kamu:</Text>
@@ -78,7 +67,6 @@ const GameDetail: React.FC<Props> = ({ route }) => {
                         setSelectedPayment={setSelectedPayment}
                     />
 
-
                     <View style={styles.totalBox}>
                         <Text style={styles.totalText}>Total: </Text>
                         <Text style={styles.totalAmount}>Rp{total.toLocaleString('id-ID')}</Text>
@@ -88,7 +76,6 @@ const GameDetail: React.FC<Props> = ({ route }) => {
                         style={[styles.confirmButton, !(selectedProduct && userId && selectedPayment) && { backgroundColor: '#555' }]}
                         disabled={!(selectedProduct && userId && selectedPayment)}
                         onPress={() => {
-                            // Logic submit bisa ditaruh di sini
                             alert(`Top-up ${selectedProduct.label} ke ID ${userId} via ${selectedPayment}`);
                         }}
                     >
