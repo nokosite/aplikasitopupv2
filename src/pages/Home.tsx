@@ -9,7 +9,6 @@ import {
   SafeAreaView,
   Platform,
   StatusBar,
-  StyleSheet,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { games } from '../data/gameData';
@@ -42,7 +41,10 @@ const Home: React.FC = () => {
       style={[homeStyles.card, isFeatured && homeStyles.featuredCard]}
       onPress={() => navigation.navigate('GameDetail', { game })}
     >
-      <Image source={game.image} style={[homeStyles.image, isFeatured && homeStyles.featuredImage]} />
+      <Image
+        source={game.image}
+        style={[homeStyles.image, isFeatured && homeStyles.featuredImage]}
+      />
       <Text style={homeStyles.name}>{game.name}</Text>
     </TouchableOpacity>
   );
@@ -53,46 +55,50 @@ const Home: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.view}>
+        <StatusBar barStyle="light-content" backgroundColor="#1e1e2e" />
 
-      <StatusBar barStyle="light-content" backgroundColor="#1e1e2e" />
+        <View style={styles.header}>
+          <Text style={styles.greeting}>Hai,</Text>
+          <Text style={styles.username}>Mahes 👋</Text>
+          <Text style={styles.subtitle}>
+            Mau top up game favoritmu hari ini?
+          </Text>
+        </View>
 
-      <View style={styles.header}>
-        <Text style={styles.greeting}>Hai,</Text>
-        <Text style={styles.username}>Mahes 👋</Text>
-        <Text style={styles.subtitle}>Mau top up game favoritmu hari ini?</Text>
-      </View>
+        <TextInput
+          placeholder="Cari game..."
+          placeholderTextColor="#aaa"
+          style={styles.searchInput}
+          value={search}
+          onChangeText={handleSearch}
+        />
 
-      <TextInput
-        placeholder="Cari game..."
-        placeholderTextColor="#aaa"
-        style={styles.searchInput}
-        value={search}
-        onChangeText={handleSearch}
-      />
+        {showFeatured && (
+          <>
+            <Text style={styles.sectionTitle}>🔥 Produk Unggulan</Text>
+            <FlatList
+              data={featuredGames}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => renderGameCard(item, true)}
+              contentContainerStyle={{ paddingBottom: 32 }}
+            />
+          </>
+        )}
 
-      {showFeatured && (
-        <>
-          <Text style={styles.sectionTitle}>🔥 Produk Unggulan</Text>
-          <FlatList
-            data={featuredGames}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => renderGameCard(item, true)}
-            contentContainerStyle={{ paddingBottom: 32 }}
-          />
-        </>
-      )}
-
-      <Text style={styles.sectionTitle2}>🎮 Semua Game</Text>
-      <FlatList
-        data={showAllGames}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => renderGameCard(item)}
-        numColumns={2}
-        columnWrapperStyle={{ justifyContent: 'space-between' }}
-        contentContainerStyle={{ paddingBottom: 32 }}
-      />
+        <Text style={styles.sectionTitle2}>🎮 Semua Game</Text>
+        <FlatList
+          data={showAllGames}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => renderGameCard(item)}
+          numColumns={2}
+          columnWrapperStyle={{
+            justifyContent: 'space-between',
+            columnGap: 12,
+          }}
+          contentContainerStyle={{ paddingBottom: 32 }}
+        />
       </View>
     </SafeAreaView>
   );
