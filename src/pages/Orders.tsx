@@ -34,10 +34,19 @@ const Orders: React.FC = () => {
 
     try {
       setLoading(true);
+      
+      // Check if orderService is available
+      if (!orderService || typeof orderService.getOrdersByUser !== 'function') {
+        console.warn('OrderService not available, using empty orders');
+        setOrders([]);
+        return;
+      }
+      
       const userOrders = await orderService.getOrdersByUser(user.id);
-      setOrders(userOrders);
+      setOrders(userOrders || []);
     } catch (error) {
       console.error('Error loading orders:', error);
+      setOrders([]); // Set empty array as fallback
       toastService.showError('Gagal Memuat', 'Tidak dapat memuat riwayat transaksi');
     } finally {
       setLoading(false);

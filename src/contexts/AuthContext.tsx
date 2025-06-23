@@ -65,13 +65,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const signOut = async () => {
-    setLoading(true);
-    const { error } = await authService.signOut();
-    if (!error) {
+    try {
+      setLoading(true);
+      const { error } = await authService.signOut();
+      if (error) {
+        throw new Error(error.message || 'Logout failed');
+      }
       setUser(null);
       setSession(null);
+    } catch (error) {
+      console.error('SignOut error:', error);
+      throw error;
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const value = {

@@ -15,6 +15,7 @@ import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../contexts/AuthContext';
 import { toastService } from '../services/toastService';
+import { orderService } from '../services/orderService';
 import ToastTester from '../components/atoms/ToastTester';
 import SupabaseDebug from '../components/atoms/SupabaseDebug';
 
@@ -29,44 +30,89 @@ const Profile: React.FC = () => {
     balance: 250000,
   };
 
+  const performLogout = async () => {
+    console.log('🚪 Logout process started');
+    try {
+      // Show loading toast
+      console.log('📱 Showing loading toast');
+      toastService.showInfo('Logout', 'Sedang keluar dari akun...');
+      
+      // Clear user orders before logout
+      if (user?.id) {
+        console.log('🗑️ Clearing user orders for:', user.id);
+        await orderService.clearUserOrders(user.id);
+      }
+      
+      // Sign out from auth service
+      console.log('🔓 Calling signOut');
+      await signOut();
+      console.log('✅ SignOut completed');
+      
+      // Show success message
+      console.log('🎉 Showing success toast');
+      toastService.showAuthSuccess('logout');
+      
+      // Reset navigation to login screen immediately
+      console.log('🧭 Resetting navigation to Login');
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Login' as never }],
+      });
+      console.log('✅ Navigation reset completed');
+      
+    } catch (error) {
+      console.error('❌ Logout error:', error);
+      toastService.showError('Logout Gagal', 'Terjadi kesalahan saat logout. Silakan coba lagi.');
+    }
+  };
+
   const handleLogout = () => {
-    Alert.alert(
-      'Logout',
-      'Apakah Anda yakin ingin keluar?',
-      [
-        {
-          text: 'Batal',
-          style: 'cancel',
-        },
-        {
-          text: 'Keluar',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              // Show loading toast
-              toastService.showInfo('Logout', 'Sedang keluar dari akun...');
-              
-              // Sign out from auth service
-              await signOut();
-              
-              // Show success message
-              toastService.showAuthSuccess('logout');
-              
-              // Reset navigation to login screen
-              setTimeout(() => {
-                navigation.reset({
-                  index: 0,
-                  routes: [{ name: 'Login' as never }],
-                });
-              }, 1500); // Slightly longer delay to show success toast
-            } catch (error) {
-              console.error('Logout error:', error);
-              toastService.showError('Logout Gagal', 'Terjadi kesalahan saat logout. Silakan coba lagi.');
-            }
+    console.log('🔔 Alert dialog will be shown');
+    
+    // For web platform, Alert.alert doesn't work well, so use confirm
+    if (typeof window !== 'undefined') {
+      console.log('🌐 Web platform detected, using window.confirm');
+      const confirmed = window.confirm('Apakah Anda yakin ingin keluar dari akun?');
+      if (confirmed) {
+        console.log('✅ User confirmed logout via window.confirm');
+        performLogout();
+      } else {
+        console.log('❌ Logout cancelled by user via window.confirm');
+      }
+      return;
+    }
+    
+    try {
+      Alert.alert(
+        'Konfirmasi Logout',
+        'Apakah Anda yakin ingin keluar dari akun?',
+        [
+          {
+            text: 'Batal',
+            style: 'cancel',
+            onPress: () => console.log('❌ Logout cancelled by user'),
           },
-        },
-      ]
-    );
+          {
+            text: 'Ya, Keluar',
+            style: 'destructive',
+            onPress: () => {
+              console.log('✅ User confirmed logout');
+              performLogout();
+            },
+          },
+        ],
+        { 
+          cancelable: true,
+          onDismiss: () => console.log('📱 Alert dismissed')
+        }
+      );
+      console.log('🔔 Alert.alert called successfully');
+    } catch (error) {
+      console.error('❌ Alert.alert failed:', error);
+      console.log('🔄 Falling back to direct logout');
+      // Fallback: proceed with logout directly if Alert fails
+      performLogout();
+    }
   };
 
   const menuItems = [
@@ -114,36 +160,82 @@ const Profile: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Menu Items */}
-                  {/* Development Tools - Hanya untuk development */}
-          {__DEV__ && (
-            <View style={styles.devToolsCard}>
-              <Text style={styles.devToolsTitle}>🔧 Developer Tools</Text>
-              
-              <TouchableOpacity
-                style={styles.debugPageButton}
-                onPress={() => navigation.navigate('SupabaseDebug' as never)}
-              >
-                <Icon name="bug" size={24} color="#00bcd4" />
-                <View style={styles.debugPageContent}>
-                  <Text style={styles.debugPageTitle}>Supabase Debug Center</Text>
-                  <Text style={styles.debugPageSubtitle}>Comprehensive connection testing</Text>
-                </View>
-                <Icon name="chevron-forward" size={20} color="#aaa" />
-              </TouchableOpacity>
+        {/* Development Tools - Hanya untuk development */}
+        {__DEV__ && (
+          <View style={styles.devToolsCard}>
+            <Text style={styles.devToolsTitle}>🔧 Developer Tools</Text>
+            
+            <TouchableOpacity
+              style={styles.debugPageButton}
+              onPress={() => navigation.navigate('SupabaseDebug' as never)}
+            >
+              <Icon name="bug" size={24} color="#00bcd4" />
+              <View style={styles.debugPageContent}>
+                <Text style={styles.debugPageTitle}>Supabase Debug Center</Text>
+                <Text style={styles.debugPageSubtitle}>Comprehensive connection testing</Text>
+              </View>
+              <Icon name="chevron-forward" size={20} color="#aaa" />
+            </TouchableOpacity>
 
-              <SupabaseDebug />
-              <ToastTester />
-            </View>
-          )}
-          
-          <View style={styles.menuContainer}>
-            {menuItems.map((item) => (
+            {/* Test Alert Button */}
+            <TouchableOpacity
+              style={[styles.debugPageButton, { backgroundColor: 'rgba(255, 193, 7, 0.1)', marginTop: 8 }]}
+              onPress={() => {
+                console.log('🧪 Testing Alert dialog');
+                if (typeof window !== 'undefined') {
+                  const result = window.confirm('This is a test to check if confirmation works on web');
+                  console.log('✅ Web confirm result:', result);
+                } else {
+                  Alert.alert(
+                    'Test Alert',
+                    'This is a test to check if Alert.alert works',
+                    [
+                      { text: 'Cancel', style: 'cancel' },
+                      { text: 'OK', onPress: () => console.log('✅ Alert test OK pressed') }
+                    ]
+                  );
+                }
+              }}
+            >
+              <Icon name="warning" size={24} color="#FFC107" />
+              <View style={styles.debugPageContent}>
+                <Text style={[styles.debugPageTitle, { color: '#FFC107' }]}>Test Alert Dialog</Text>
+                <Text style={styles.debugPageSubtitle}>Check if Alert.alert works</Text>
+              </View>
+              <Icon name="chevron-forward" size={20} color="#aaa" />
+            </TouchableOpacity>
+
+            {/* Direct Logout Button for Testing */}
+            <TouchableOpacity
+              style={[styles.debugPageButton, { backgroundColor: 'rgba(244, 67, 54, 0.1)', marginTop: 8 }]}
+              onPress={() => {
+                console.log('🔧 Direct logout test triggered');
+                performLogout();
+              }}
+            >
+              <Icon name="log-out" size={24} color="#F44336" />
+              <View style={styles.debugPageContent}>
+                <Text style={[styles.debugPageTitle, { color: '#F44336' }]}>Direct Logout Test</Text>
+                <Text style={styles.debugPageSubtitle}>Force logout without Alert</Text>
+              </View>
+              <Icon name="chevron-forward" size={20} color="#aaa" />
+            </TouchableOpacity>
+
+            <SupabaseDebug />
+            <ToastTester />
+          </View>
+        )}
+        
+        {/* Menu Items */}
+        <View style={styles.menuContainer}>
+          {menuItems.map((item) => (
             <TouchableOpacity 
               key={item.id} 
               style={styles.menuItem}
               onPress={() => {
+                console.log(`🔘 Menu item pressed: ${item.title}`);
                 if (item.title === 'Keluar') {
+                  console.log('🚪 Logout menu item detected, calling handleLogout');
                   handleLogout();
                 } else if (item.title === 'Riwayat Transaksi') {
                   navigation.navigate('Orders' as never);

@@ -87,38 +87,8 @@ const Home: React.FC = () => {
     }
 
     try {
-      const sampleOrders = [
-        {
-          gameName: 'Mobile Legends',
-          productName: '86 Diamond',
-          amount: 12000,
-          status: 'success' as const,
-          userId: user.id,
-          paymentMethod: 'DANA',
-        },
-        {
-          gameName: 'Free Fire',
-          productName: '70 Diamond',
-          amount: 10000,
-          status: 'pending' as const,
-          userId: user.id,
-          paymentMethod: 'OVO',
-        },
-        {
-          gameName: 'Valorant',
-          productName: '125 VP',
-          amount: 15000,
-          status: 'failed' as const,
-          userId: user.id,
-          paymentMethod: 'GoPay',
-        }
-      ];
-
-      for (const order of sampleOrders) {
-        await orderService.saveOrder(order);
-      }
-
-      toastService.showSuccess('Success', 'Sample orders created!');
+      await orderService.createSampleOrders(user.id);
+      toastService.showSuccess('Success', 'Sample orders created! Check Orders tab.');
     } catch (error) {
       console.error('Error creating sample orders:', error);
       toastService.showError('Error', 'Failed to create sample orders');
