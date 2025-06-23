@@ -9,6 +9,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import TabBar from '../components/organisms/TabBar';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Profile: React.FC = () => {
   const profileData = {
@@ -19,12 +20,12 @@ const Profile: React.FC = () => {
   };
 
   const menuItems = [
-    { id: 1, title: 'Edit Profile', icon: '👤' },
-    { id: 2, title: 'Riwayat Transaksi', icon: '📋' },
-    { id: 3, title: 'Top Up Saldo', icon: '💰' },
-    { id: 4, title: 'Bantuan', icon: '❓' },
-    { id: 5, title: 'Tentang Aplikasi', icon: 'ℹ️' },
-    { id: 6, title: 'Keluar', icon: '🚪' },
+    { id: 1, title: 'Edit Profile', icon: 'person-circle-outline', color: '#00bcd4' },
+    { id: 2, title: 'Riwayat Transaksi', icon: 'receipt-outline', color: '#4CAF50' },
+    { id: 3, title: 'Top Up Saldo', icon: 'wallet-outline', color: '#FF9800' },
+    { id: 4, title: 'Bantuan', icon: 'help-circle-outline', color: '#9C27B0' },
+    { id: 5, title: 'Tentang Aplikasi', icon: 'information-circle-outline', color: '#2196F3' },
+    { id: 6, title: 'Keluar', icon: 'log-out-outline', color: '#F44336' },
   ];
 
   return (
@@ -68,10 +69,15 @@ const Profile: React.FC = () => {
           {menuItems.map((item) => (
             <TouchableOpacity key={item.id} style={styles.menuItem}>
               <View style={styles.menuLeft}>
-                <Text style={styles.menuIcon}>{item.icon}</Text>
+                <Icon 
+                  name={item.icon} 
+                  size={24} 
+                  color={item.color} 
+                  style={styles.menuIcon}
+                />
                 <Text style={styles.menuTitle}>{item.title}</Text>
               </View>
-              <Text style={styles.menuArrow}>›</Text>
+              <Icon name="chevron-forward" size={20} color="#aaa" />
             </TouchableOpacity>
           ))}
         </View>
@@ -208,7 +214,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   menuIcon: {
-    fontSize: 20,
     marginRight: 16,
   },
   menuTitle: {
@@ -216,8 +221,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '500',
   },
-  menuArrow: {
-    fontSize: 20,
-    color: '#aaa',
-  },
+
 }); 

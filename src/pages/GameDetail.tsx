@@ -7,13 +7,14 @@ import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation';
 import { glassStyles } from '../styles/glassStyles';
 import PaymentMethod from '../components/molecules/PaymentMethods';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 type Props = {
     route: RouteProp<RootStackParamList, 'GameDetail'>;
     navigation: any;
 };
 
-const GameDetail: React.FC<Props> = ({ route }) => {
+const GameDetail: React.FC<Props> = ({ route, navigation }) => {
     const { game } = route.params;
     const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
     const [userId, setUserId] = useState('');
@@ -38,6 +39,14 @@ const GameDetail: React.FC<Props> = ({ route }) => {
         <SafeAreaView style={styles.container}>
             <View style={styles.container}>
                 <ScrollView contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
+                    {/* Back Button */}
+                    <TouchableOpacity 
+                        style={styles.backButton}
+                        onPress={() => navigation.goBack()}
+                    >
+                        <Icon name="chevron-back" size={24} color="#fff" />
+                    </TouchableOpacity>
+                    
                     <Image source={game.image} style={styles.gameImage} />
                     <Text style={styles.title}>{game.name}</Text>
                     <Text style={styles.subtitle}>Masukkan ID Akun:</Text>
@@ -94,6 +103,18 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#1e1e2e',
         flexGrow: 1,
+    },
+    backButton: {
+        position: 'absolute',
+        top: 10,
+        left: 10,
+        zIndex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        borderRadius: 20,
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     scrollView: {
         padding: 20,

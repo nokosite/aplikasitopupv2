@@ -6,17 +6,17 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 50,
-    paddingHorizontal: 16, // ← lebih kecil supaya pas di semua device
-    paddingBottom: 70, // ← space untuk tab bar
     backgroundColor: '#1e1e2e',
+    paddingBottom: 70, // space untuk tab bar
   },
   view: {
-    padding: 0, // ← dihapus supaya nggak dobel padding
+    flex: 1,
   },
 
   // Header Area
   header: {
-    marginBottom: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 16,
   },
   greeting: {
     fontSize: 22,
@@ -34,67 +34,99 @@ export const styles = StyleSheet.create({
     marginTop: 4,
   },
 
-  // Search Input
-  searchInput: {
+  // Search Container
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#2e2e3e',
-    color: '#fff',
     borderRadius: 12,
-    paddingVertical: 10,
     paddingHorizontal: 14,
+    marginHorizontal: 20,
     marginBottom: 16,
+  },
+  searchIcon: {
+    marginRight: 10,
+  },
+  searchInput: {
+    flex: 1,
+    color: '#fff',
+    paddingVertical: 10,
+    fontSize: 16,
   },
 
   // Section Titles
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 16,
+    marginBottom: 12,
+    paddingHorizontal: 20,
+  },
   sectionTitle: {
     color: '#fff',
     fontSize: 18,
     fontWeight: '700',
-    marginBottom: 8,
-    marginTop: 16,
+    marginLeft: 8,
   },
   sectionTitle2: {
     color: '#fff',
     fontSize: 18,
     fontWeight: '700',
-    marginBottom: 8,
-    marginTop: 16,
+    marginLeft: 8,
+  },
+
+  // Featured Games Container
+  featuredContainer: {
+    paddingLeft: 20,
+    paddingRight: 4, // Small padding for last item
+    paddingBottom: 16,
+  },
+
+  // Games Grid Container
+  gamesContainer: {
+    paddingHorizontal: 20,
+    paddingBottom: 30,
   },
 
   // Card Style
   card: {
     backgroundColor: 'rgba(255,255,255,0.06)',
     borderRadius: 16,
-    padding: 12,
+    padding: 16,
     alignItems: 'center',
-    marginBottom: 14,
-    width: (width - 16 * 2 - 12) / 2, // ← hitungan supaya pas 2 kolom
+    marginBottom: 16,
+    width: (width - 20 * 2 - 16) / 2, // Proper calculation with 20px margins and 16px gap
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.25,
     shadowRadius: 10,
+    elevation: 8,
   },
   featuredCard: {
     width: width * 0.4,
-    marginRight: 14,
+    marginRight: 16,
     backgroundColor: 'rgba(255,255,255,0.08)',
+    padding: 16,
   },
 
   // Gambar Game
   image: {
-    width: 90,
-    height: 90,
+    width: 100,
+    height: 100,
     borderRadius: 12,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   featuredImage: {
     width: 120,
     height: 120,
+    borderRadius: 16,
   },
 
   // Nama Game
   name: {
     color: '#fff',
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '600',
+    textAlign: 'center',
   },
 });

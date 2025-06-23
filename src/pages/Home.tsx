@@ -7,12 +7,14 @@ import {
   TouchableOpacity,
   TextInput,
   SafeAreaView,
+  ScrollView,
   Platform,
   StatusBar,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { games } from '../data/gameData';
 import TabBar from '../components/organisms/TabBar';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import { styles } from '../styles/homeStyles';
 import { styles as homeStyles } from '../styles/homeStyles';
@@ -55,40 +57,61 @@ const Home: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.view}>
-        <StatusBar barStyle="light-content" backgroundColor="#1e1e2e" />
+      <StatusBar barStyle="light-content" backgroundColor="#1e1e2e" />
+      
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.greeting}>Hai,</Text>
+        <Text style={styles.username}>Mahes 👋</Text>
+        <Text style={styles.subtitle}>
+          Mau top up game favoritmu hari ini?
+        </Text>
+      </View>
 
-        <View style={styles.header}>
-          <Text style={styles.greeting}>Hai,</Text>
-          <Text style={styles.username}>Mahes 👋</Text>
-          <Text style={styles.subtitle}>
-            Mau top up game favoritmu hari ini?
-          </Text>
+      {/* Search */}
+      <View style={styles.searchContainer}>
+          <Icon 
+            name="search-outline" 
+            size={20} 
+            color="#aaa" 
+            style={styles.searchIcon}
+          />
+          <TextInput
+            placeholder="Cari game..."
+            placeholderTextColor="#aaa"
+            style={styles.searchInput}
+            value={search}
+            onChangeText={handleSearch}
+          />
         </View>
 
-        <TextInput
-          placeholder="Cari game..."
-          placeholderTextColor="#aaa"
-          style={styles.searchInput}
-          value={search}
-          onChangeText={handleSearch}
-        />
-
-        {showFeatured && (
+        {/* Content */}
+        <ScrollView 
+          style={styles.view}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1 }}
+        >
+          {showFeatured && (
           <>
-            <Text style={styles.sectionTitle}>🔥 Produk Unggulan</Text>
+            <View style={styles.sectionHeader}>
+              <Icon name="flame" size={20} color="#FF6B6B" />
+              <Text style={styles.sectionTitle}>Produk Unggulan</Text>
+            </View>
             <FlatList
               data={featuredGames}
               horizontal
               showsHorizontalScrollIndicator={false}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => renderGameCard(item, true)}
-              contentContainerStyle={{ paddingBottom: 32 }}
+              contentContainerStyle={styles.featuredContainer}
             />
           </>
         )}
 
-        <Text style={styles.sectionTitle2}>🎮 Semua Game</Text>
+        <View style={styles.sectionHeader}>
+          <Icon name="game-controller" size={20} color="#00bcd4" />
+          <Text style={styles.sectionTitle2}>Semua Game</Text>
+        </View>
         <FlatList
           data={showAllGames}
           keyExtractor={(item) => item.id}
@@ -96,11 +119,14 @@ const Home: React.FC = () => {
           numColumns={2}
           columnWrapperStyle={{
             justifyContent: 'space-between',
-            columnGap: 12,
+            marginBottom: 0,
           }}
-          contentContainerStyle={{ paddingBottom: 32 }}
+          contentContainerStyle={styles.gamesContainer}
+          showsVerticalScrollIndicator={false}
+          scrollEnabled={false}
         />
-      </View>
+        </ScrollView>
+      
       <TabBar activeTab="Home" />
     </SafeAreaView>
   );

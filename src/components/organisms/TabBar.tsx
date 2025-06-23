@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 interface TabBarProps {
   activeTab: 'Home' | 'Orders' | 'Profile';
@@ -10,9 +11,24 @@ const TabBar: React.FC<TabBarProps> = ({ activeTab }) => {
   const navigation = useNavigation();
 
   const tabs = [
-    { name: 'Home', label: 'Beranda', icon: '🏠' },
-    { name: 'Orders', label: 'Transaksi', icon: '📋' },
-    { name: 'Profile', label: 'Profile', icon: '👤' },
+    { 
+      name: 'Home', 
+      label: 'Beranda', 
+      iconActive: 'home',
+      iconInactive: 'home-outline'
+    },
+    { 
+      name: 'Orders', 
+      label: 'Transaksi', 
+      iconActive: 'receipt',
+      iconInactive: 'receipt-outline'
+    },
+    { 
+      name: 'Profile', 
+      label: 'Profile', 
+      iconActive: 'person',
+      iconInactive: 'person-outline'
+    },
   ];
 
   return (
@@ -26,9 +42,12 @@ const TabBar: React.FC<TabBarProps> = ({ activeTab }) => {
             style={styles.tabButton}
             onPress={() => navigation.navigate(tab.name as never)}
           >
-            <Text style={[styles.tabIcon, { opacity: isActive ? 1 : 0.6 }]}>
-              {tab.icon}
-            </Text>
+            <Icon 
+              name={isActive ? tab.iconActive : tab.iconInactive}
+              size={24}
+              color={isActive ? '#00bcd4' : '#666'}
+              style={styles.tabIcon}
+            />
             <Text style={[
               styles.tabLabel, 
               { color: isActive ? '#00bcd4' : '#666' }
@@ -57,6 +76,14 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+    elevation: 8, // Shadow untuk Android
+    shadowColor: '#000', // Shadow untuk iOS
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   tabButton: {
     flex: 1,
@@ -64,7 +91,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   tabIcon: {
-    fontSize: 24,
     marginBottom: 4,
   },
   tabLabel: {

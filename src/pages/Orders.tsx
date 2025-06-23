@@ -8,6 +8,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import TabBar from '../components/organisms/TabBar';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 interface Order {
   id: string;
@@ -149,7 +150,7 @@ const Orders: React.FC = () => {
         />
       ) : (
         <View style={styles.emptyState}>
-          <Text style={styles.emptyIcon}>📋</Text>
+          <Icon name="receipt-outline" size={64} color="#666" style={styles.emptyIcon} />
           <Text style={styles.emptyTitle}>Belum ada transaksi</Text>
           <Text style={styles.emptySubtitle}>
             Transaksi Anda akan muncul di sini
@@ -269,7 +270,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
   },
   emptyIcon: {
-    fontSize: 48,
     marginBottom: 16,
   },
   emptyTitle: {
