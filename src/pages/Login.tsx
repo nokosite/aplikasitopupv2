@@ -24,9 +24,11 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleAuth = async () => {
     if (!email || !password) {
@@ -36,6 +38,16 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
 
     if (!isLogin && !name) {
       toastService.showError('Form Tidak Lengkap', 'Nama harus diisi untuk registrasi');
+      return;
+    }
+
+    if (!isLogin && password !== confirmPassword) {
+      toastService.showError('Password Tidak Sama', 'Password dan konfirmasi password harus sama');
+      return;
+    }
+
+    if (!isLogin && password.length < 6) {
+      toastService.showError('Password Terlalu Pendek', 'Password minimal 6 karakter');
       return;
     }
 
@@ -80,6 +92,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
   const resetForm = () => {
     setEmail('');
     setPassword('');
+    setConfirmPassword('');
     setName('');
   };
 
@@ -163,6 +176,77 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
               />
             </TouchableOpacity>
           </View>
+
+          {!isLogin && (
+            <View style={styles.inputContainer}>
+              <Icon name="lock-closed-outline" size={20} color="#aaa" style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Konfirmasi Password"
+                placeholderTextColor="#aaa"
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                secureTextEntry={!showConfirmPassword}
+                autoCapitalize="none"
+              />
+              <View style={styles.passwordActions}>
+                {/* Password Match Indicator */}
+                {confirmPassword.length > 0 && (
+                  <Icon 
+                    name={password === confirmPassword ? "checkmark-circle" : "close-circle"} 
+                    size={20} 
+                    color={password === confirmPassword ? "#4CAF50" : "#F44336"} 
+                    style={styles.matchIndicator}
+                  />
+                )}
+                {/* Show/Hide Password Button */}
+                <TouchableOpacity
+                  style={styles.showPasswordButton}
+                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  <Icon 
+                    name={showConfirmPassword ? "eye-outline" : "eye-off-outline"} 
+                    size={20} 
+                    color="#aaa" 
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+
+          {/* Password Requirements */}
+          {!isLogin && password.length > 0 && (
+            <View style={styles.passwordRequirements}>
+              <View style={styles.requirementItem}>
+                <Icon 
+                  name={password.length >= 6 ? "checkmark-circle" : "close-circle"} 
+                  size={16} 
+                  color={password.length >= 6 ? "#4CAF50" : "#F44336"} 
+                />
+                <Text style={[
+                  styles.requirementText,
+                  { color: password.length >= 6 ? "#4CAF50" : "#F44336" }
+                ]}>
+                  Minimal 6 karakter
+                </Text>
+              </View>
+              {confirmPassword.length > 0 && (
+                <View style={styles.requirementItem}>
+                  <Icon 
+                    name={password === confirmPassword ? "checkmark-circle" : "close-circle"} 
+                    size={16} 
+                    color={password === confirmPassword ? "#4CAF50" : "#F44336"} 
+                  />
+                  <Text style={[
+                    styles.requirementText,
+                    { color: password === confirmPassword ? "#4CAF50" : "#F44336" }
+                  ]}>
+                    Password sama
+                  </Text>
+                </View>
+              )}
+            </View>
+          )}
 
           {/* Login/Register Button */}
           <TouchableOpacity
@@ -278,6 +362,27 @@ const styles = StyleSheet.create({
   },
   showPasswordButton: {
     padding: 4,
+  },
+  passwordActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  matchIndicator: {
+    marginRight: 8,
+  },
+  passwordRequirements: {
+    marginBottom: 16,
+    paddingHorizontal: 16,
+  },
+  requirementItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  requirementText: {
+    fontSize: 14,
+    marginLeft: 8,
+    fontWeight: '500',
   },
   authButton: {
     backgroundColor: '#00bcd4',

@@ -137,6 +137,35 @@ class ToastService {
     const msg = messages[action];
     this.showSuccess(msg.title, msg.message);
   }
+
+  // Helper method untuk password validation
+  showPasswordValidation(type: 'match' | 'mismatch' | 'weak' | 'strong') {
+    const messages = {
+      match: {
+        title: 'Password Cocok ✅',
+        message: 'Konfirmasi password sudah sesuai'
+      },
+      mismatch: {
+        title: 'Password Tidak Cocok ❌',
+        message: 'Konfirmasi password berbeda'
+      },
+      weak: {
+        title: 'Password Terlalu Lemah',
+        message: 'Gunakan minimal 6 karakter'
+      },
+      strong: {
+        title: 'Password Kuat ✅',
+        message: 'Password memenuhi syarat keamanan'
+      }
+    };
+
+    const msg = messages[type];
+    if (type === 'match' || type === 'strong') {
+      this.showSuccess(msg.title, msg.message);
+    } else if (type === 'mismatch' || type === 'weak') {
+      this.showWarning(msg.title, msg.message);
+    }
+  }
 }
 
 export const toastService = new ToastService(); 
