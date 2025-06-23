@@ -8,6 +8,7 @@ import { RootStackParamList } from '../navigation';
 import { glassStyles } from '../styles/glassStyles';
 import PaymentMethod from '../components/molecules/PaymentMethods';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { toastService } from '../services/toastService';
 
 type Props = {
     route: RouteProp<RootStackParamList, 'GameDetail'>;
@@ -85,7 +86,30 @@ const GameDetail: React.FC<Props> = ({ route, navigation }) => {
                         style={[styles.confirmButton, !(selectedProduct && userId && selectedPayment) && { backgroundColor: '#555' }]}
                         disabled={!(selectedProduct && userId && selectedPayment)}
                         onPress={() => {
-                            alert(`Top-up ${selectedProduct.label} ke ID ${userId} via ${selectedPayment}`);
+                            // Validation
+                            if (!selectedProduct) {
+                                toastService.showError('Pilihan Tidak Lengkap', 'Silakan pilih paket top-up');
+                                return;
+                            }
+                            if (!userId) {
+                                toastService.showError('ID Akun Kosong', 'Masukkan ID akun game Anda');
+                                return;
+                            }
+                            if (!selectedPayment) {
+                                toastService.showError('Metode Pembayaran', 'Pilih metode pembayaran');
+                                return;
+                            }
+
+                            // Show processing toast
+                            toastService.showInfo('Memproses Pembayaran', 'Tunggu sebentar...');
+                            
+                            // Simulate processing time
+                            setTimeout(() => {
+                                toastService.showSuccess(
+                                    'Top-up Berhasil!', 
+                                    `${selectedProduct.label} berhasil dibeli ke ID ${userId}`
+                                );
+                            }, 2000);
                         }}
                     >
                         <Text style={styles.confirmText}>Konfirmasi Pembelian</Text>

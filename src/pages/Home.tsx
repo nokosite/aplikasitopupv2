@@ -15,6 +15,7 @@ import { useNavigation } from '@react-navigation/native';
 import { games } from '../data/gameData';
 import TabBar from '../components/organisms/TabBar';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { toastService } from '../services/toastService';
 
 import { styles } from '../styles/homeStyles';
 import { styles as homeStyles } from '../styles/homeStyles';
@@ -35,6 +36,19 @@ const Home: React.FC = () => {
         game.name.toLowerCase().includes(text.toLowerCase())
       );
       setFilteredGames(filtered);
+      
+      // Show toast if no results found
+      if (filtered.length === 0) {
+        toastService.showInfo(
+          'Game Tidak Ditemukan',
+          `Tidak ada game dengan nama "${text}"`
+        );
+      } else if (filtered.length === 1) {
+        toastService.showSuccess(
+          'Game Ditemukan!',
+          `Menampilkan hasil untuk "${text}"`
+        );
+      }
     }
   };
 
@@ -42,7 +56,13 @@ const Home: React.FC = () => {
     <TouchableOpacity
       key={game.id}
       style={[homeStyles.card, isFeatured && homeStyles.featuredCard]}
-      onPress={() => navigation.navigate('GameDetail', { game })}
+      onPress={() => {
+        toastService.showInfo(
+          'Membuka Game',
+          `Memuat halaman top-up ${game.name}`
+        );
+        navigation.navigate('GameDetail', { game });
+      }}
     >
       <Image
         source={game.image}

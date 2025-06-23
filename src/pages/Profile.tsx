@@ -10,13 +10,54 @@ import {
 } from 'react-native';
 import TabBar from '../components/organisms/TabBar';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { authService } from '../services/authService';
+import { Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../contexts/AuthContext';
+import { toastService } from '../services/toastService';
+import ToastTester from '../components/atoms/ToastTester';
+import SupabaseDebug from '../components/atoms/SupabaseDebug';
 
 const Profile: React.FC = () => {
+  const navigation = useNavigation();
+  const { user, signOut } = useAuth();
+  
   const profileData = {
-    name: 'Mahes',
-    email: 'mahes@example.com',
+    name: user?.user_metadata?.name || user?.email?.split('@')[0] || 'User',
+    email: user?.email || 'user@example.com',
     phone: '+62 812-3456-7890',
     balance: 250000,
+  };
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Logout',
+      'Apakah Anda yakin ingin keluar?',
+      [
+        {
+          text: 'Batal',
+          style: 'cancel',
+        },
+        {
+          text: 'Keluar',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await signOut();
+              toastService.showAuthSuccess('logout');
+              setTimeout(() => {
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: 'Login' as never }],
+                });
+              }, 1000); // Delay to show success toast
+            } catch (error) {
+              toastService.showError('Logout Gagal', 'Terjadi kesalahan saat logout');
+            }
+          },
+        },
+      ]
+    );
   };
 
   const menuItems = [
@@ -65,9 +106,42 @@ const Profile: React.FC = () => {
         </View>
 
         {/* Menu Items */}
-        <View style={styles.menuContainer}>
-          {menuItems.map((item) => (
-            <TouchableOpacity key={item.id} style={styles.menuItem}>
+                  {/* Development Tools - Hanya untuk development */}
+          {__DEV__ && (
+            <View style={styles.devToolsCard}>
+              <Text style={styles.devToolsTitle}>🔧 Developer Tools</Text>
+              
+              <TouchableOpacity
+                style={styles.debugPageButton}
+                onPress={() => navigation.navigate('SupabaseDebug' as never)}
+              >
+                <Icon name="bug" size={24} color="#00bcd4" />
+                <View style={styles.debugPageContent}>
+                  <Text style={styles.debugPageTitle}>Supabase Debug Center</Text>
+                  <Text style={styles.debugPageSubtitle}>Comprehensive connection testing</Text>
+                </View>
+                <Icon name="chevron-forward" size={20} color="#aaa" />
+              </TouchableOpacity>
+
+              <SupabaseDebug />
+              <ToastTester />
+            </View>
+          )}
+          
+          <View style={styles.menuContainer}>
+            {menuItems.map((item) => (
+            <TouchableOpacity 
+              key={item.id} 
+              style={styles.menuItem}
+              onPress={() => {
+                if (item.title === 'Keluar') {
+                  handleLogout();
+                } else {
+                  // Handle other menu items
+                  console.log(`Pressed: ${item.title}`);
+                }
+              }}
+            >
               <View style={styles.menuLeft}>
                 <Icon 
                   name={item.icon} 
@@ -220,6 +294,46 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff',
     fontWeight: '500',
+  },
+  devToolsCard: {
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderRadius: 12,
+    padding: 16,
+    marginHorizontal: 20,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 188, 212, 0.3)',
+  },
+  devToolsTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#00bcd4',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  debugPageButton: {
+    backgroundColor: 'rgba(0, 188, 212, 0.1)',
+    borderRadius: 12,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 188, 212, 0.3)',
+  },
+  debugPageContent: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  debugPageTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  debugPageSubtitle: {
+    fontSize: 12,
+    color: '#aaa',
+    marginTop: 2,
   },
 
 }); 

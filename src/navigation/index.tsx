@@ -4,17 +4,21 @@ import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import OnboardingScreen from '../pages/Onboarding';
+import LoginScreen from '../pages/Login';
 import HomeScreen from '../pages/Home';
 import ProfileScreen from '../pages/Profile';
 import OrdersScreen from '../pages/Orders';
 import GameDetail from '../pages/GameDetail';
+import SupabaseDebugPage from '../pages/SupabaseDebugPage';
 
 export type RootStackParamList = {
   Onboarding: undefined;
+  Login: undefined;
   Home: undefined;
   Profile: undefined;
   Orders: undefined;
   GameDetail: { game: any };
+  SupabaseDebug: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -61,21 +65,33 @@ const Navigation = () => {
       <Stack.Navigator 
         initialRouteName="Onboarding" 
         screenOptions={{ headerShown: false }}
-      >
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-        <Stack.Screen 
-          name="Home" 
-          component={HomeScreen} 
-          options={({ navigation, route }) => ({
-            headerShown: false,
-            // Custom footer for tab simulation
-            presentation: 'card',
-          })}
-        />
-        <Stack.Screen name="Orders" component={OrdersScreen} />
-        <Stack.Screen name="Profile" component={ProfileScreen} />
-        <Stack.Screen name="GameDetail" component={GameDetail} />
-      </Stack.Navigator>
+              >
+          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen 
+            name="Home" 
+            component={HomeScreen} 
+            options={({ navigation, route }) => ({
+              headerShown: false,
+              // Custom footer for tab simulation
+              presentation: 'card',
+            })}
+          />
+          <Stack.Screen name="Orders" component={OrdersScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="GameDetail" component={GameDetail} />
+          <Stack.Screen 
+            name="SupabaseDebug" 
+            component={SupabaseDebugPage}
+            options={{
+              title: 'Debug Center',
+              headerStyle: {
+                backgroundColor: '#1e1e2e',
+              },
+              headerTintColor: '#fff',
+            }}
+          />
+        </Stack.Navigator>
     </NavigationContainer>
   );
 };

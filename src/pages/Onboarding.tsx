@@ -2,6 +2,7 @@
 import React from 'react';
 import { Image, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Onboarding from 'react-native-onboarding-swiper';
+import { onboardingData } from '../data/onboardingData';
 
 const Dot = ({ selected }: { selected: boolean }) => {
   return (
@@ -17,47 +18,32 @@ const Dot = ({ selected }: { selected: boolean }) => {
   );
 };
 
-const OnboardingButton = ({ title, ...props }) => (
+const OnboardingButton = ({ title, ...props }: { title: string; [key: string]: any }) => (
   <TouchableOpacity style={styles.button} {...props}>
     <Text style={styles.buttonText}>{title}</Text>
   </TouchableOpacity>
 );
 
-const OnboardingScreen = ({ navigation }) => {
+const OnboardingScreen = ({ navigation }: { navigation: any }) => {
+  // Transform onboardingData ke format yang dibutuhkan react-native-onboarding-swiper
+  const pages = onboardingData.map((item) => ({
+    backgroundColor: '#1e1e2e',
+    image: <Image source={item.image} style={styles.image} />,
+    title: item.title,
+    subtitle: item.description,
+    titleStyles: styles.title,
+    subTitleStyles: styles.subtitle,
+  }));
+
   return (
     <Onboarding
-      onSkip={() => navigation.replace('Home')}
-      onDone={() => navigation.replace('Home')}
+      onSkip={() => navigation.replace('Login')}
+      onDone={() => navigation.replace('Login')}
       DotComponent={Dot}
       SkipButtonComponent={(props) => <OnboardingButton title="Skip" {...props} />}
       NextButtonComponent={(props) => <OnboardingButton title="Next" {...props} />}
       DoneButtonComponent={(props) => <OnboardingButton title="Done" {...props} />}
-      pages={[
-        {
-          backgroundColor: '#1e1e2e',
-          image: <Image source={require('../assets/promo.jpg')} style={styles.image} />,
-          title: 'Top-Up Game Cepat',
-          subtitle: 'Isi ulang game favoritmu dengan cepat dan aman.',
-          titleStyles: styles.title,
-          subTitleStyles: styles.subtitle,
-        },
-        {
-          backgroundColor: '#1e1e2e',
-          image: <Image source={require('../assets/promo.jpg')} style={styles.image} />,
-          title: 'Banyak Pilihan Game',
-          subtitle: 'Tersedia berbagai game populer seperti ML, FF, dan lainnya.',
-          titleStyles: styles.title,
-          subTitleStyles: styles.subtitle,
-        },
-        {
-          backgroundColor: '#1e1e2e',
-          image: <Image source={require('../assets/promo.jpg')} style={styles.image} />,
-          title: 'Transaksi Aman',
-          subtitle: 'Pembayaran mudah dan data kamu tetap aman.',
-          titleStyles: styles.title,
-          subTitleStyles: styles.subtitle,
-        },
-      ]}
+      pages={pages}
     />
   );
 };
