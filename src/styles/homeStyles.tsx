@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 50,
     paddingHorizontal: 16, // ← lebih kecil supaya pas di semua device
+    paddingBottom: 70, // ← space untuk tab bar
     backgroundColor: '#1e1e2e',
   },
   view: {

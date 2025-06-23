@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { games } from '../data/gameData';
+import TabBar from '../components/organisms/TabBar';
 
 import { styles } from '../styles/homeStyles';
 import { styles as homeStyles } from '../styles/homeStyles';
@@ -100,6 +101,7 @@ const Home: React.FC = () => {
           contentContainerStyle={{ paddingBottom: 32 }}
         />
       </View>
+      <TabBar activeTab="Home" />
     </SafeAreaView>
   );
 };
