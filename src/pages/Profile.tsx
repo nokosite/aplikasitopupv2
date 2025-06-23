@@ -43,16 +43,25 @@ const Profile: React.FC = () => {
           style: 'destructive',
           onPress: async () => {
             try {
+              // Show loading toast
+              toastService.showInfo('Logout', 'Sedang keluar dari akun...');
+              
+              // Sign out from auth service
               await signOut();
+              
+              // Show success message
               toastService.showAuthSuccess('logout');
+              
+              // Reset navigation to login screen
               setTimeout(() => {
                 navigation.reset({
                   index: 0,
                   routes: [{ name: 'Login' as never }],
                 });
-              }, 1000); // Delay to show success toast
+              }, 1500); // Slightly longer delay to show success toast
             } catch (error) {
-              toastService.showError('Logout Gagal', 'Terjadi kesalahan saat logout');
+              console.error('Logout error:', error);
+              toastService.showError('Logout Gagal', 'Terjadi kesalahan saat logout. Silakan coba lagi.');
             }
           },
         },
@@ -136,9 +145,12 @@ const Profile: React.FC = () => {
               onPress={() => {
                 if (item.title === 'Keluar') {
                   handleLogout();
+                } else if (item.title === 'Riwayat Transaksi') {
+                  navigation.navigate('Orders' as never);
                 } else {
                   // Handle other menu items
                   console.log(`Pressed: ${item.title}`);
+                  toastService.showInfo('Info', `Fitur ${item.title} akan segera hadir`);
                 }
               }}
             >

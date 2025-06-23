@@ -10,18 +10,22 @@ import {
   ScrollView,
   Platform,
   StatusBar,
+  StyleSheet,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { games } from '../data/gameData';
 import TabBar from '../components/organisms/TabBar';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { toastService } from '../services/toastService';
+import { orderService } from '../services/orderService';
+import { useAuth } from '../contexts/AuthContext';
 
 import { styles } from '../styles/homeStyles';
 import { styles as homeStyles } from '../styles/homeStyles';
 
 const Home: React.FC = () => {
   const navigation = useNavigation();
+  const { user } = useAuth();
   const [search, setSearch] = useState('');
   const [filteredGames, setFilteredGames] = useState(games);
 
@@ -74,6 +78,52 @@ const Home: React.FC = () => {
 
   const showFeatured = search.trim() === '';
   const showAllGames = search.trim() === '' ? games : filteredGames;
+
+  // Dev function to create sample orders for testing
+  const createSampleOrders = async () => {
+    if (!user) {
+      toastService.showError('Error', 'User not logged in');
+      return;
+    }
+
+    try {
+      const sampleOrders = [
+        {
+          gameName: 'Mobile Legends',
+          productName: '86 Diamond',
+          amount: 12000,
+          status: 'success' as const,
+          userId: user.id,
+          paymentMethod: 'DANA',
+        },
+        {
+          gameName: 'Free Fire',
+          productName: '70 Diamond',
+          amount: 10000,
+          status: 'pending' as const,
+          userId: user.id,
+          paymentMethod: 'OVO',
+        },
+        {
+          gameName: 'Valorant',
+          productName: '125 VP',
+          amount: 15000,
+          status: 'failed' as const,
+          userId: user.id,
+          paymentMethod: 'GoPay',
+        }
+      ];
+
+      for (const order of sampleOrders) {
+        await orderService.saveOrder(order);
+      }
+
+      toastService.showSuccess('Success', 'Sample orders created!');
+    } catch (error) {
+      console.error('Error creating sample orders:', error);
+      toastService.showError('Error', 'Failed to create sample orders');
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -145,11 +195,23 @@ const Home: React.FC = () => {
           showsVerticalScrollIndicator={false}
           scrollEnabled={false}
         />
+
+        {/* Development Tools - Only in development mode */}
+        {__DEV__ && user && (
+          <View style={styles.devSection}>
+            <Text style={styles.devTitle}>🔧 Dev Tools</Text>
+            <TouchableOpacity style={styles.devButton} onPress={createSampleOrders}>
+              <Text style={styles.devButtonText}>Create Sample Orders</Text>
+            </TouchableOpacity>
+          </View>
+        )}
         </ScrollView>
       
       <TabBar activeTab="Home" />
     </SafeAreaView>
   );
 };
+
+
 
 export default Home;

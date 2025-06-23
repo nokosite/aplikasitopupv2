@@ -2,6 +2,10 @@ import { StyleSheet, Dimensions, Platform, StatusBar } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
+// Calculated sizes for game cards
+const gameCardWidth = (width - 20 * 2 - 16) / 2; // Two cards per row with margins and gap
+const gameCardHeight = gameCardWidth * 1.2;
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -128,5 +132,36 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
+  },
+
+
+  
+  // Development Tools Styles
+  devSection: {
+    marginHorizontal: 20,
+    marginBottom: 20,
+    padding: 16,
+    backgroundColor: 'rgba(255, 193, 7, 0.1)',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 193, 7, 0.3)',
+  },
+  devTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#FFC107',
+    marginBottom: 12,
+  },
+  devButton: {
+    backgroundColor: '#FFC107',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  devButtonText: {
+    color: '#1e1e2e',
+    fontWeight: '600',
+    fontSize: 14,
   },
 });

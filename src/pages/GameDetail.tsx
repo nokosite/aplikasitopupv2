@@ -9,6 +9,8 @@ import { glassStyles } from '../styles/glassStyles';
 import PaymentMethod from '../components/molecules/PaymentMethods';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { toastService } from '../services/toastService';
+import { orderService } from '../services/orderService';
+import { useAuth } from '../contexts/AuthContext';
 
 type Props = {
     route: RouteProp<RootStackParamList, 'GameDetail'>;
@@ -17,9 +19,11 @@ type Props = {
 
 const GameDetail: React.FC<Props> = ({ route, navigation }) => {
     const { game } = route.params;
+    const { user } = useAuth();
     const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
     const [userId, setUserId] = useState('');
     const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
+    const [isProcessing, setIsProcessing] = useState(false);
 
     const renderProduct = ({ item }: { item: any }) => (
         <TouchableOpacity
@@ -83,9 +87,15 @@ const GameDetail: React.FC<Props> = ({ route, navigation }) => {
                     </View>
 
                     <TouchableOpacity
-                        style={[styles.confirmButton, !(selectedProduct && userId && selectedPayment) && { backgroundColor: '#555' }]}
-                        disabled={!(selectedProduct && userId && selectedPayment)}
-                        onPress={() => {
+                        style={[styles.confirmButton, (!(selectedProduct && userId && selectedPayment) || isProcessing) && { backgroundColor: '#555' }]}
+                        disabled={!(selectedProduct && userId && selectedPayment) || isProcessing}
+                        onPress={async () => {
+                            // Check if user is logged in
+                            if (!user) {
+                                toastService.showError('Login Diperlukan', 'Silakan login terlebih dahulu');
+                                return;
+                            }
+
                             // Validation
                             if (!selectedProduct) {
                                 toastService.showError('Pilihan Tidak Lengkap', 'Silakan pilih paket top-up');
@@ -100,19 +110,67 @@ const GameDetail: React.FC<Props> = ({ route, navigation }) => {
                                 return;
                             }
 
-                            // Show processing toast
-                            toastService.showInfo('Memproses Pembayaran', 'Tunggu sebentar...');
-                            
-                            // Simulate processing time
-                            setTimeout(() => {
+                            try {
+                                setIsProcessing(true);
+                                
+                                // Show processing toast
+                                toastService.showInfo('Memproses Pembayaran', 'Tunggu sebentar...');
+                                
+                                // Simulate processing time
+                                await new Promise(resolve => setTimeout(resolve, 2000));
+                                
+                                // Create order
+                                const order = await orderService.saveOrder({
+                                    gameName: game.name,
+                                    productName: selectedProduct.label,
+                                    amount: selectedProduct.price,
+                                    status: 'success' as const,
+                                    userId: user.id,
+                                    paymentMethod: selectedPayment,
+                                });
+
+                                // Show success toast
                                 toastService.showSuccess(
                                     'Top-up Berhasil!', 
-                                    `${selectedProduct.label} berhasil dibeli ke ID ${userId}`
+                                    `${selectedProduct.label} berhasil dibeli untuk ID ${userId}`
                                 );
-                            }, 2000);
+
+                                // Reset form after 1 second
+                                setTimeout(() => {
+                                    setSelectedProduct(null);
+                                    setUserId('');
+                                    setSelectedPayment(null);
+                                }, 1000);
+
+                            } catch (error) {
+                                console.error('Order creation failed:', error);
+                                
+                                // Create failed order for tracking
+                                try {
+                                    await orderService.saveOrder({
+                                        gameName: game.name,
+                                        productName: selectedProduct.label,
+                                        amount: selectedProduct.price,
+                                        status: 'failed' as const,
+                                        userId: user.id,
+                                        paymentMethod: selectedPayment,
+                                    });
+                                } catch (saveError) {
+                                    console.error('Failed to save failed order:', saveError);
+                                }
+
+                                toastService.showError(
+                                    'Pembayaran Gagal', 
+                                    'Terjadi kesalahan, silakan coba lagi'
+                                );
+                            } finally {
+                                setIsProcessing(false);
+                            }
                         }}
                     >
-                        <Text style={styles.confirmText}>Konfirmasi Pembelian</Text>
+                        <Text style={styles.confirmText}>
+                            {isProcessing ? 'Memproses...' : 'Konfirmasi Pembelian'}
+                        </Text>
                     </TouchableOpacity>
                 </ScrollView>
             </View>
